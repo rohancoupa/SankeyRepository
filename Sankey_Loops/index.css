@@ -1,0 +1,36 @@
+#chart {
+  height: 800px;
+}
+
+.node rect {
+  cursor: move;
+  fill-opacity: 1;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: 0.3;
+}
+
+
+.cycleLink {
+  fill: red;
+  opacity: .2;
+  stroke: none;
+  stroke-linejoin: "round";
+}
+
+.cycleLink:hover {
+  opacity: 1;
+}
+
+.link:hover {
+  stroke-opacity: 0.7;
+}

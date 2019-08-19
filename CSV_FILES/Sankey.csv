@@ -1,5 +1,0 @@
-Invoice_ID,Field_Name,From_Value,To_Value
-6,"status","N/A","new"
-6,"status","new","draft"
-6, "status","draft,"on_hold",
-6, "status","draft","approved"
