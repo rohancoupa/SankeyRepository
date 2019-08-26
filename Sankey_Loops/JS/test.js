@@ -106,7 +106,7 @@ let data = [
   { to: 'pending_approval', from: 'draft', weight: 1 },
   { to: 'ap_hold', from: 'new', weight: 2 },
   { to: 'draft2', from: 'pending_approval', weight: 1 },
-  { to: 'draft', from: 'pending_approval', weight: 1 },
+  { to: 'draft', from: 'pending_approval', weight: 5 },
   { to: 'booking_hold', from: 'processing', weight: 2 }
 ];
 //==============================================================================

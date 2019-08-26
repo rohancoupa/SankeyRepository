@@ -10,7 +10,6 @@
 
 .node text {
   pointer-events: none;
-
 }
 
 .link {
@@ -18,7 +17,6 @@
   stroke: #000;
   stroke-opacity: 0.3;
 }
-
 
 .cycleLink {
   fill: red;
