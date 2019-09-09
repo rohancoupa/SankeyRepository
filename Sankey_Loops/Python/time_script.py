@@ -1,14 +1,14 @@
 import csv;
 import json;
 
-with open('CSV/order.csv', 'r') as csv_file:
+with open('CSV/order_event_hist.csv', 'r') as csv_file:
     csv_reader = csv.DictReader(csv_file);
     req_id = {};
     for line in csv_reader :
         if (line["Requisition ID"] in req_id.keys()) :
             req_id[line["Requisition ID"]].append(line["Status"]);
         else :
-            req_id[line["Requisition ID"]] = ["N/A"];
+            req_id[line["Requisition ID"]] = [];
             req_id[line["Requisition ID"]].append(line["Status"]);
     return_dict = [];
     for key in req_id.keys() :

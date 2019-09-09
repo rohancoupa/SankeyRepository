@@ -36,6 +36,10 @@ function createChart(energy) {
       .enter().append("path")
       .attr("class", function(d) { return (d.causesCycle ? "cycleLink" : "link") })
       .attr("d", path)
+      .attr("id", function(d,i){
+        d.id = i;
+        return "link-"+i;
+      })
 	  .sort(function(a, b) { return b.dy - a.dy; });
 
   link.filter( function(d) { return !d.causesCycle} )
@@ -99,7 +103,7 @@ function createChart(energy) {
 
   var numCycles = 0;
   for( var i = 0; i< sankey.links().length; i++ ) {
-    if( sankey.links()[i].causesCycle ) {
+    if (sankey.links()[i].causesCycle ) {
       numCycles++;
     }
   }
@@ -119,12 +123,12 @@ function createChart(energy) {
       var remainingNodes=[],
       nextNodes=[];
       var stroke_opacity = 0;
-      if( d3.select(this).attr("data-clicked") == "1" ){
+      if (d3.select(this).attr("data-clicked") == "1" ){
         d3.select(this).attr("data-clicked","0");
-        stroke_opacity = 0.5;
+        stroke_opacity = 0.3;
       }else{
         d3.select(this).attr("data-clicked","1");
-        stroke_opacity = 1;
+        stroke_opacity = 0.6;
       }
 
       var traverse = [{
@@ -141,30 +145,15 @@ function createChart(energy) {
           console.log(link.id);
           highlight_link(link.id, stroke_opacity);
         });
+      });
+  }
 
-        while (remainingNodes.length) {
-          nextNodes = [];
-          remainingNodes.forEach(function(node) {
-            node[step.linkType].forEach(function(link) {
-              nextNodes.push(link[step.nodeType]);
-
-              highlight_link(link.id, stroke_opacity);
-            });
-          });
-          remainingNodes = nextNodes;
-        }
-        debugger;
-  });
-}
-
-function highlight_link(id,opacity){
+  function highlight_link(id,opacity){
     d3.select("#link-"+id).style("stroke-opacity", opacity);
-}
-
+  }
 };
 
-let json_data = [{'to': 'issued', 'from': 'N/A', 'weight': 2102}, {'to': 'sent_via_email', 'from': 'issued', 'weight': 2392}, {'to': 'draft', 'from': 'N/A', 'weight': 914}, {'to': 'issued', 'from': 'draft', 'weight': 871}, {'to': 'scheduled_for_email', 'from': 'issued', 'weight': 167}, {'to': 'sent_via_email', 'from': 'scheduled_for_email', 'weight': 158}, {'to': 'soft_closed', 'from': 'sent_via_email', 'weight': 3}, {'to': 'awaiting_online_purchase', 'from': 'issued', 'weight': 87}, {'to': 'scheduled_for_cxml', 'from': 'issued', 'weight': 10}, {'to': 'purchased_online', 'from': 'issued', 'weight': 6}, {'to': 'sent_manually', 'from': 'issued', 'weight': 27}, {'to': 'cancelled', 'from': 'sent_via_email', 'weight': 5}, {'to': 'sent_manually', 'from': 'cancelled', 'weight': 3}, {'to': 'purchased_online', 'from': 'awaiting_online_purchase', 'weight': 32}, {'to': 'not_sent', 'from': 'issued', 'weight': 1}, {'to': 'scheduled_for_email', 'from': 'awaiting_online_purchase', 'weight': 1}, {'to': 'buyer_hold', 'from': 'draft', 'weight': 12}, {'to': 'issued', 'from': 'buyer_hold', 'weight': 6}, {'to': 'sent_via_cxml', 'from': 'scheduled_for_cxml', 'weight': 4}, {'to': 'cancelled', 'from': 'issued', 'weight': 1}, {'to': 'sent_manually', 'from': 'sent_via_email', 'weight': 3}, {'to': 'created', 'from': 'draft', 'weight': 11}, {'to': 'scheduled_for_email', 'from': 'sent_via_email', 'weight': 4}, {'to': 'sent_via_email', 'from': 'created', 'weight': 4}, {'to': 'sent_via_email', 'from': 'sent_manually', 'weight': 3}, {'to': 'cancelled', 'from': 'created', 'weight': 1}, {'to': 'soft_closed', 'from': 'issued', 'weight': 1}, {'to': 'issued', 'from': 'soft_closed', 'weight': 1}, {'to': 'sent_manually', 'from': 'scheduled_for_email', 'weight': 1}, {'to': 'currency_hold', 'from': 'draft', 'weight': 1}, {'to': 'scheduled_for_xml', 'from': 'issued', 'weight': 2}]
-
+let json_data = [{'to': 'issued', 'from': 'draft', 'weight': 2804}, {'to': 'scheduled_for_email', 'from': 'issued', 'weight': 129}, {'to': 'sent_via_email', 'from': 'scheduled_for_email', 'weight': 152}, {'to': 'scheduled_for_cxml', 'from': 'issued', 'weight': 246}, {'to': 'sent_via_cxml', 'from': 'scheduled_for_cxml', 'weight': 247}, {'to': 'soft_closed', 'from': 'sent_via_cxml', 'weight': 124}, {'to': 'soft_closed', 'from': 'issued', 'weight': 543}, {'to': 'sent_manually', 'from': 'issued', 'weight': 65}, {'to': 'soft_closed', 'from': 'sent_via_email', 'weight': 23}, {'to': 'scheduled_for_email', 'from': 'sent_via_email', 'weight': 11}, {'to': 'issued', 'from': 'soft_closed', 'weight': 13}, {'to': 'soft_closed', 'from': 'sent_manually', 'weight': 18}, {'to': 'issued', 'from': 'sent_manually', 'weight': 1}, {'to': 'cancelled', 'from': 'issued', 'weight': 3}, {'to': 'sent_manually', 'from': 'sent_via_email', 'weight': 4}, {'to': 'cancelled', 'from': 'sent_via_email', 'weight': 1}, {'to': 'sent_manually', 'from': 'cancelled', 'weight': 1}]
 
 
 
@@ -233,7 +222,6 @@ function loadData (data) {
       link.source = one_dict[data[i]["from"]]
       link.target = one_dict[data[i]["to"]]
       link.value = data[i]["weight"];
-      link.id = "link-"+i;;
       dataObject.links[i] = link;
     }
 //==============================================================================
